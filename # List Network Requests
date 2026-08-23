@@ -1,0 +1,6 @@
+# List Network Requests
+
+| reqid | method | url | status |
+|---|---|---|---|
+| 1 | GET | http://localhost:5175/vite.svg | failed - 304 |
+| 2 | GET | http://localhost:5175/vite.svg | failed - 304 |

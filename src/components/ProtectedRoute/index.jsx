@@ -8,21 +8,15 @@
 import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext.jsx';
+import { PageLoader } from '../common/Loading';
 import './index.css';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useContext(AuthContext);
 
-  // Show loading state while checking auth
+  // Show dots pulse loader while checking auth on page refresh
   if (loading) {
-    return (
-      <div className="protected-loading">
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-        <p className="protected-loading-text">Loading...</p>
-      </div>
-    );
+    return <PageLoader message="Verifying Session..." />;
   }
 
   // Redirect to login if not authenticated

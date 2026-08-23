@@ -1,0 +1,64 @@
+.not-found-page {
+  min-height: calc(100vh - 80px); /* Adjust based on navbar height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.not-found-content {
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.not-found-icon {
+  font-size: 5rem;
+  color: #ffc107;
+  margin-bottom: 1.5rem;
+}
+
+.not-found-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d3436;
+  margin-bottom: 1rem;
+}
+
+.not-found-text {
+  font-size: 1.1rem;
+  color: #636e72;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.not-found-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color, #4834d4);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(72, 52, 212, 0.3);
+}
+
+.not-found-home-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(72, 52, 212, 0.4);
+  filter: brightness(1.1);
+}
+
+.home-btn-icon {
+  font-size: 1.2rem;
+}

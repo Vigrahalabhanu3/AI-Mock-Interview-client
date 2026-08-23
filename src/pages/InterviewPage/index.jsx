@@ -10,6 +10,7 @@ import {
 import VoiceRecorder from '../../components/VoiceRecorder';
 import AudioPlayer from '../../components/AudioPlayer';
 import CodeEditor from '../../components/CodeEditor';
+import { InterviewSkeleton, ErrorState, ButtonLoader, ContextualAILoader } from '../../components/common/Loading';
 import { FaUserTie } from 'react-icons/fa';
 import {
   BsRecordCircleFill,
@@ -33,6 +34,7 @@ function InterviewPage() {
   const location = useLocation();
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [ending, setEnding] = useState(false);
 
@@ -54,48 +56,81 @@ function InterviewPage() {
   const [interviewerText, setInterviewerText] = useState('');
   const [farewellMessage, setFarewellMessage] = useState('');
 
-  useEffect(() => {
-    const loadInterview = async () => {
-      try {
-        const data = await getInterview(id);
-        setCurrentQuestionNum(data.currentQuestion);
-        setTotalQuestions(data.totalQuestions);
+  const loadInterview = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getInterview(id);
+      setCurrentQuestionNum(data.currentQuestion);
+      setTotalQuestions(data.totalQuestions);
 
-        if (data.questions && data.questions.length > 0) {
-          const qIndex = data.currentQuestion - 1;
-          setCurrentQuestion(data.questions[qIndex] || data.questions[0]);
-        }
-
-        const interviewerMsgs = data.messages.filter(
-          (m) => m.role === 'interviewer'
-        );
-        if (data.currentQuestion === 1 && interviewerMsgs.length >= 1) {
-          setInterviewerText(interviewerMsgs[0].content);
-        } else if (interviewerMsgs.length > 0) {
-          setInterviewerText(interviewerMsgs[interviewerMsgs.length - 1].content);
-        }
-
-        if (data.currentQuestion === 1) {
-          const audio = location.state?.audio || data.lastAudio;
-          if (audio) {
-            setCurrentAudio(audio);
-            setInterviewerState(STATE_SPEAKING);
-          } else {
-            setInterviewerState(STATE_SPEAKING);
-            setTimeout(() => setInterviewerState(STATE_LISTENING), 3000);
-          }
-        } else {
-          setInterviewerState(STATE_LISTENING);
-        }
-      } catch (error) {
-        toast.error('Failed to load interview');
-        navigate('/');
-      } finally {
-        setLoading(false);
+      if (data.questions && data.questions.length > 0) {
+        const qIndex = data.currentQuestion - 1;
+        setCurrentQuestion(data.questions[qIndex] || data.questions[0]);
       }
-    };
+
+      const interviewerMsgs = data.messages.filter(
+        (m) => m.role === 'interviewer'
+      );
+      if (data.currentQuestion === 1 && interviewerMsgs.length >= 1) {
+        setInterviewerText(interviewerMsgs[0].content);
+      } else if (interviewerMsgs.length > 0) {
+        setInterviewerText(interviewerMsgs[interviewerMsgs.length - 1].content);
+      }
+
+      if (data.currentQuestion === 1) {
+        const audio = location.state?.audio || data.lastAudio;
+        if (audio) {
+          setCurrentAudio(audio);
+          setInterviewerState(STATE_SPEAKING);
+        } else {
+          setInterviewerState(STATE_SPEAKING);
+          setTimeout(() => setInterviewerState(STATE_LISTENING), 3000);
+        }
+      } else {
+        setInterviewerState(STATE_LISTENING);
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to load interview room session.');
+      toast.error('Failed to load interview session');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     loadInterview();
-  }, [id, navigate, location.state]);
+  }, [id, location.state]);
+
+  if (loading) {
+    return <InterviewSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="interview-page">
+        <ErrorState
+          title="Interview Room Connection Failed"
+          message={error}
+          onRetry={loadInterview}
+          retryText="Retry Session Connection"
+        />
+      </div>
+    );
+  }
+
+  if (ending) {
+    return (
+      <div className="interview-page">
+        <ContextualAILoader
+          title="Generating AI Evaluation Report"
+          subtitle="Processing speech transcripts, evaluating technical answers, and compiling scorecard..."
+          activeStep={3}
+          steps={['Transcribing Session Audio', 'Evaluating Technical Answers', 'Compiling Scorecard Report']}
+        />
+      </div>
+    );
+  }
 
   const handleAudioEnded = () => {
     if (interviewerState === STATE_FAREWELL) return;
@@ -424,13 +459,15 @@ function InterviewPage() {
                         rows={4}
                         disabled={submitting}
                       />
-                      <button
-                        className={`submit-text-btn ${submitting || !textAnswer.trim() ? 'submit-text-btn-disabled' : ''}`}
+                      <ButtonLoader
+                        className="submit-text-btn"
+                        loading={submitting}
+                        loadingText="Evaluating Answer..."
                         onClick={handleSubmitText}
-                        disabled={submitting || !textAnswer.trim()}
+                        disabled={!textAnswer.trim()}
                       >
-                        {submitting ? 'Submitting...' : 'Submit Text Answer'}
-                      </button>
+                        Submit Text Answer
+                      </ButtonLoader>
                     </div>
                   )}
                 </div>
@@ -485,17 +522,17 @@ function InterviewPage() {
                       onChange={(val) => setCode(val || '')}
                       language={currentQuestion.codeLanguage || codeLanguage}
                     />
-                    <button
-                      className={`submit-code-btn ${submitting || !code.trim() ? 'submit-code-btn-disabled' : ''}`}
+                    <ButtonLoader
+                      className="submit-code-btn"
+                      loading={submitting}
+                      loadingText="Evaluating Code..."
                       onClick={handleSubmitCode}
-                      disabled={submitting || !code.trim()}
+                      disabled={!code.trim()}
                     >
-                      {submitting
-                        ? 'Evaluating...'
-                        : currentQuestion.codeType === 'fix'
-                          ? 'Submit Fixed Code'
-                          : 'Submit Solution'}
-                    </button>
+                      {currentQuestion.codeType === 'fix'
+                        ? 'Submit Fixed Code'
+                        : 'Submit Solution'}
+                    </ButtonLoader>
                   </>
                 ) : (
                   <div className="explain-answer-block">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getInterview } from '../../services/interviewService.js';
+import { FeedbackSkeleton, ErrorState } from '../../components/common/Loading';
 import ScoreCard from '../../components/ScoreCard';
 import getScoreColor from '../../constants/scoreColors.js';
 import {
@@ -18,36 +19,45 @@ function FeedbackPage() {
 
   const [interview, setInterview] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  const loadFeedback = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getInterview(id);
+
+      if (!data.feedback) {
+        setError('No evaluation feedback is available for this session.');
+        return;
+      }
+
+      setInterview(data);
+    } catch (err) {
+      setError(err.message || 'Failed to fetch interview evaluation feedback.');
+      toast.error('Failed to load feedback');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadFeedback = async () => {
-      try {
-        const data = await getInterview(id);
-
-        if (!data.feedback) {
-          toast.error('No feedback available for this interview.');
-          navigate('/');
-          return;
-        }
-
-        setInterview(data);
-      } catch (error) {
-        toast.error('Failed to load feedback');
-        navigate('/');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadFeedback();
-  }, [id, navigate]);
+  }, [id]);
 
   if (loading) {
+    return <FeedbackSkeleton />;
+  }
+
+  if (error) {
     return (
-      <div className="feedback-loading-state">
-        <div className="spinner-border spinner-border-sm" role="status" />
-        <p className="feedback-loading-text">Loading feedback...</p>
+      <div className="feedback-page">
+        <ErrorState
+          title="Evaluation Report Unavailable"
+          message={error}
+          onRetry={loadFeedback}
+          retryText="Retry Loading Report"
+        />
       </div>
     );
   }

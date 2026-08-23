@@ -1,25 +1,59 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { AuthContext } from './context/AuthContext.jsx';
+import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
-import Navbar from './components/Navbar';
+import AppLayout from './components/AppLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
 import InterviewSetupPage from './pages/InterviewSetupPage';
 import InterviewPage from './pages/InterviewPage';
 import FeedbackPage from './pages/FeedbackPage';
 import HistoryPage from './pages/HistoryPage';
+import ProfilePage from './pages/ProfilePage';
+import NotFoundPage from './pages/NotFoundPage';
+import { PageLoader } from './components/common/Loading';
+
+/**
+ * Smart Root Router Component
+ * - If user is logged in: renders Dashboard (/ / /dashboard)
+ * - If user is NOT logged in: renders public LandingPage
+ */
+function RootRoute() {
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return <PageLoader message="Verifying Session..." />;
+  }
+
+  if (user) {
+    return (
+      <ProtectedRoute>
+        <AppLayout>
+          <HomePage />
+        </AppLayout>
+      </ProtectedRoute>
+    );
+  }
+
+  return <LandingPage />;
+}
 
 function App() {
   return (
     <div className="app-shell">
       <Routes>
+        <Route path="/" element={<RootRoute />} />
+        <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
 
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <ProtectedRoute>
-              <Navbar />
-              <HomePage />
+              <AppLayout>
+                <HomePage />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
@@ -27,8 +61,9 @@ function App() {
           path="/setup"
           element={
             <ProtectedRoute>
-              <Navbar />
-              <InterviewSetupPage />
+              <AppLayout>
+                <InterviewSetupPage />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
@@ -36,8 +71,9 @@ function App() {
           path="/interview/:id"
           element={
             <ProtectedRoute>
-              <Navbar />
-              <InterviewPage />
+              <AppLayout>
+                <InterviewPage />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
@@ -45,8 +81,9 @@ function App() {
           path="/feedback/:id"
           element={
             <ProtectedRoute>
-              <Navbar />
-              <FeedbackPage />
+              <AppLayout>
+                <FeedbackPage />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
@@ -54,13 +91,25 @@ function App() {
           path="/history"
           element={
             <ProtectedRoute>
-              <Navbar />
-              <HistoryPage />
+              <AppLayout>
+                <HistoryPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <ProfilePage />
+              </AppLayout>
             </ProtectedRoute>
           }
         />
 
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="/404" element={<NotFoundPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
   );

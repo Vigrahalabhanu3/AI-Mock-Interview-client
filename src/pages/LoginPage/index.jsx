@@ -7,10 +7,11 @@
 // Reference: React Icons - reference-react.md
 // ============================================
 
-import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import { register, emailLogin } from '../../services/authService.js';
+import { ButtonLoader } from '../../components/common/Loading';
 import {
   BsCameraVideo,
   BsMicFill,
@@ -19,20 +20,39 @@ import {
   BsBarChartFill,
   BsShieldCheck,
   BsPeopleFill,
+  BsStars,
 } from 'react-icons/bs';
 import toast from 'react-hot-toast';
 import './index.css';
 
 function LoginPage() {
-  // Form state - Reference: useState hook - reference-react.md
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [searchParams] = useSearchParams();
+  const mode = searchParams.get('mode');
+
+  const [isSignUp, setIsSignUp] = useState(mode === 'signup');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login } = useContext(AuthContext);
+  const { user, login } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // If user is already logged in, redirect directly to dashboard
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
+
+  // Sync mode search param with tab state
+  useEffect(() => {
+    if (mode === 'signup') {
+      setIsSignUp(true);
+    } else if (mode === 'login') {
+      setIsSignUp(false);
+    }
+  }, [mode]);
 
   // Handle form submission - Reference: async/await - reference-javascript.md
   const handleSubmit = async (e) => {
@@ -65,19 +85,25 @@ function LoginPage() {
       {/* ---- Top Nav Bar ---- */}
       <nav className="login-nav">
         <div className="login-nav-brand">
-          <BsCameraVideo className="login-nav-icon" />
+          <div className="brand-icon-box">
+            <BsCameraVideo className="login-nav-icon" />
+          </div>
           <span className="login-nav-name">AI Mock Interview</span>
         </div>
       </nav>
 
-      {/* ---- Hero Banner (Dark) ---- */}
+      {/* ---- Hero Banner ---- */}
       <div className="login-hero">
+        <div className="hero-sparkle-pill">
+          <BsStars className="sparkle-icon" />
+          <span>Gemini AI Practice Engine</span>
+        </div>
+
         <h1 className="login-hero-heading">
           Ace Your Next <span className="login-hero-accent">Technical Interview</span>
         </h1>
         <p className="login-hero-tagline">
-          Practice with an AI interviewer that speaks, listens, and gives you
-          real-time feedback on your performance.
+          Practice with an interactive AI interviewer that speaks, listens, evaluates code, and provides actionable performance scoring.
         </p>
 
         {/* Feature pills */}
@@ -92,27 +118,29 @@ function LoginPage() {
           </div>
           <div className="login-hero-pill">
             <BsCodeSlash className="login-pill-icon" />
-            <span className="login-pill-text">Live Coding</span>
+            <span className="login-pill-text">Live Coding Evaluation</span>
           </div>
           <div className="login-hero-pill">
             <BsBarChartFill className="login-pill-icon" />
-            <span className="login-pill-text">AI Scoring</span>
+            <span className="login-pill-text">AI Scorecard</span>
           </div>
         </div>
       </div>
 
-      {/* ---- Form Card (overlaps hero bottom) ---- */}
+      {/* ---- Form Card ---- */}
       <div className="login-form-wrapper">
-        <div className="login-card">
+        <div className="login-card glass-card">
           {/* Tab Switcher */}
           <div className="login-tabs">
             <button
+              type="button"
               className={`login-tab ${!isSignUp ? 'login-tab-active' : ''}`}
               onClick={() => setIsSignUp(false)}
             >
               Sign In
             </button>
             <button
+              type="button"
               className={`login-tab ${isSignUp ? 'login-tab-active' : ''}`}
               onClick={() => setIsSignUp(true)}
             >
@@ -129,7 +157,7 @@ function LoginPage() {
                   id="name"
                   type="text"
                   className="login-input"
-                  placeholder="John Doe"
+                  placeholder="e.g. John Doe"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -164,33 +192,30 @@ function LoginPage() {
               />
             </div>
 
-            <button
+            <ButtonLoader
               type="submit"
-              className={`login-submit ${loading ? 'login-submit-disabled' : ''}`}
-              disabled={loading}
+              className="login-submit-btn"
+              loading={loading}
+              loadingText={isSignUp ? 'Creating Account...' : 'Signing In...'}
             >
-              {loading
-                ? 'Please wait...'
-                : isSignUp
-                ? 'Create Account'
-                : 'Sign In'}
-            </button>
+              {isSignUp ? 'Create Account' : 'Sign In'}
+            </ButtonLoader>
           </form>
         </div>
 
-        {/* Trust Indicators Below Card */}
+        {/* Trust Indicators */}
         <div className="login-trust">
           <div className="login-trust-item">
             <BsShieldCheck className="login-trust-icon" />
-            <span className="login-trust-text">Secure & Private</span>
+            <span className="login-trust-text">Encrypted & Private</span>
           </div>
           <div className="login-trust-item">
             <BsPeopleFill className="login-trust-icon" />
-            <span className="login-trust-text">Join 10,000+ users</span>
+            <span className="login-trust-text">10,000+ Mock Sessions</span>
           </div>
           <div className="login-trust-item">
             <BsBarChartFill className="login-trust-icon" />
-            <span className="login-trust-text">5 Score Categories</span>
+            <span className="login-trust-text">Instant AI Feedback</span>
           </div>
         </div>
       </div>

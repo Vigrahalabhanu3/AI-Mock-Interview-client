@@ -1,99 +1,186 @@
-.navbar-container {
+.top-navbar {
+  height: 68px;
+  background: #0f172a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #0f172a;
-  padding: 0 24px;
-  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  backdrop-filter: blur(12px);
 }
 
-.navbar-left {
+.top-navbar-left {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 16px;
 }
 
-.navbar-brand {
+.sidebar-toggle-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  text-decoration: none;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.brand-icon {
-  color: #ffffff;
-  font-size: 24px;
+.sidebar-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.4);
 }
 
-.brand-text {
-  font-family: 'Bree Serif', serif;
+.toggle-icon {
+  font-size: 22px;
+}
+
+.top-page-title-group {
+  display: flex;
+  align-items: center;
+}
+
+.page-title {
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-weight: 700;
   font-size: 18px;
-  color: #ffffff;
+  color: #f8fafc;
+  letter-spacing: 0.2px;
 }
 
-.nav-links {
+.top-navbar-right {
   display: flex;
   align-items: center;
-  gap: 4px;
 }
 
-.nav-link {
+.user-profile-widget {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.navbar-streak-badge {
   display: flex;
   align-items: center;
   gap: 6px;
-  text-decoration: none;
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: #e2e8f0;
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.nav-link-icon {
-  font-size: 18px;
+.navbar-streak-badge.active {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
 }
 
-.nav-link-active {
-  background-color: #dbeafe;
-  color: #1d4ed8;
+.navbar-streak-badge:hover {
+  transform: translateY(-1px);
 }
 
-.navbar-right {
-  display: flex;
-  align-items: center;
+.streak-flame-icon {
+  font-size: 15px;
+  color: #f59e0b;
 }
 
-.navbar-user-section {
+.navbar-streak-badge.active .streak-flame-icon {
+  color: #f59e0b;
+  animation: flamePulse 1.5s infinite ease-in-out;
+}
+
+@keyframes flamePulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.5)); }
+  50% { transform: scale(1.2); filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.9)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(245, 158, 11, 0.5)); }
+}
+
+.user-avatar-badge {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 6px 14px;
+  border-radius: 30px;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.user-icon {
-  color: #ffffff;
-  font-size: 16px;
+.user-avatar-icon {
+  font-size: 22px;
+  color: #60a5fa;
 }
 
-.user-name {
-  font-family: 'Roboto', sans-serif;
+.user-display-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
   font-size: 14px;
-  color: #ffffff;
+  color: #f1f5f9;
 }
 
-.logout-btn {
-  display: flex;
+.navbar-logout-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
   cursor: pointer;
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: #dc2626;
-  padding: 6px 10px;
-  border-radius: 6px;
+  transition: all 0.2s ease;
 }
 
-.logout-icon {
+.navbar-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
+}
+
+.logout-btn-icon {
   font-size: 16px;
+}
+
+@media (max-width: 640px) {
+  .top-navbar {
+    padding: 0 16px;
+  }
+
+  .page-title {
+    font-size: 15px;
+  }
+
+  .user-display-name {
+    display: none;
+  }
+
+  .user-avatar-badge {
+    padding: 6px;
+    border-radius: 50%;
+  }
+
+  .navbar-logout-btn span {
+    display: none;
+  }
+
+  .navbar-logout-btn {
+    padding: 8px;
+    border-radius: 8px;
+  }
 }

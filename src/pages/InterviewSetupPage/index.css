@@ -1,348 +1,565 @@
+/* ============================================
+   InterviewSetupPage Styles - Advanced Production
+   ============================================ */
+
 .setup-page {
-  background-color: #f8fafc;
-  min-height: 100vh;
   padding: 32px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.setup-wrapper {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.setup-container {
-  width: 100%;
-  max-width: 1000px;
+.setup-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-.setup-step-indicator {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 32px;
-}
-
-.setup-step-badge {
-  padding: 8px 20px;
-  border-radius: 20px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  border: 1px solid #cbd5e1;
-  color: #64748b;
-  background-color: #ffffff;
-}
-
-.setup-step-active {
-  background-color: #2563eb;
+.setup-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 32px;
   color: #ffffff;
-  border-color: #2563eb;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
 }
 
-.setup-section {
-  margin-bottom: 32px;
+.setup-subtitle {
+  font-size: 15px;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0;
 }
 
-.setup-section-heading {
-  font-family: 'Bree Serif', serif;
-  font-size: 20px;
-  color: #0f172a;
-  margin: 0 0 20px 0;
-}
-
-.setup-roles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-}
-
-.setup-role-card {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 20px;
+/* WIZARD STEP NAV */
+.setup-wizard-nav {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: rgba(30, 41, 59, 0.7);
+}
+
+.wizard-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   cursor: pointer;
-  text-align: center;
+  opacity: 0.5;
+  transition: all 0.25s ease;
 }
 
-.setup-role-selected {
-  border-color: #2563eb;
-  background-color: #dbeafe;
+.wizard-step.active {
+  opacity: 1;
 }
 
-.setup-role-icon {
-  font-size: 28px;
-  color: #2563eb;
-}
-
-.setup-role-title {
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+.step-number {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
   font-weight: 700;
-  color: #0f172a;
-  margin: 0;
+  font-size: 15px;
+  color: #cbd5e1;
 }
 
-.setup-role-desc {
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: #64748b;
-  margin: 0;
-  line-height: 1.4;
+.wizard-step.active .step-number {
+  background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+  color: #ffffff;
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
 }
 
-.setup-difficulty-row {
-  display: flex;
-  gap: 16px;
-}
-
-.setup-difficulty-card {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 20px;
-  flex: 1;
+.step-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  text-align: center;
 }
 
-.setup-difficulty-selected {
-  border-color: #2563eb;
-  background-color: #dbeafe;
+.step-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.step-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.wizard-connector {
+  flex: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 0 20px;
+}
+
+/* STEP SECTION */
+.setup-step-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section-header-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.step-heading {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.step-subheading {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+/* ROLES GRID */
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.role-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.role-card:hover {
+  transform: translateY(-3px);
+}
+
+.role-card.selected {
+  border-color: #3b82f6;
+  background: rgba(30, 58, 138, 0.25);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+}
+
+.selected-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #3b82f6;
+  font-size: 20px;
+}
+
+.role-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.role-card-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.role-card-desc {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* DIFFICULTY GRID */
+.difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.difficulty-card {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.difficulty-card:hover {
+  transform: translateY(-3px);
+}
+
+.difficulty-card.selected {
+  border-color: #818cf8;
+  background: rgba(49, 46, 129, 0.3);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
 }
 
 .setup-difficulty-stars {
   display: flex;
   gap: 4px;
-  font-size: 20px;
+  font-size: 18px;
 }
 
-.setup-star-filled {
-  color: #2563eb;
+.star-filled {
+  color: #fbbf24;
 }
 
-.setup-star-empty {
-  color: #cbd5e1;
+.star-empty {
+  color: #475569;
 }
 
-.setup-difficulty-label {
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+.difficulty-title {
+  font-family: 'Outfit', sans-serif;
   font-weight: 700;
-  color: #0f172a;
+  font-size: 20px;
+  color: #f8fafc;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.difficulty-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.questions-pill {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+}
+
+.time-pill {
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+}
+
+.difficulty-desc {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
   margin: 0;
 }
 
-.setup-difficulty-desc {
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: #64748b;
-  margin: 0;
-}
-
-.setup-resume-area {
+/* RESUME UPLOAD */
+.resume-upload-wrapper {
+  padding: 40px;
   display: flex;
   justify-content: center;
 }
 
-.setup-upload-zone {
-  border: 2px dashed #cbd5e1;
-  border-radius: 12px;
-  padding: 48px;
+.upload-dropzone {
+  width: 100%;
+  max-width: 600px;
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 48px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   cursor: pointer;
-  width: 100%;
-  max-width: 480px;
-  text-align: center;
+  transition: all 0.25s ease;
+  background: rgba(15, 23, 42, 0.4);
 }
 
-.setup-upload-icon {
-  font-size: 40px;
-  color: #64748b;
+.upload-dropzone:hover {
+  border-color: #3b82f6;
+  background: rgba(30, 58, 138, 0.15);
 }
 
-.setup-upload-text {
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+.upload-icon-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.upload-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #f8fafc;
+  margin: 0;
+}
+
+.upload-subtitle {
+  font-size: 13px;
   color: #64748b;
   margin: 0;
 }
 
-.setup-resume-uploaded {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 20px 24px;
+.resume-success-box {
+  width: 100%;
+  max-width: 600px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  max-width: 480px;
+  padding: 20px 24px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 14px;
 }
 
-.setup-resume-info {
+.resume-icon-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  font-size: 22px;
 }
 
-.setup-resume-file-icon {
-  font-size: 24px;
-  color: #2563eb;
+.resume-file-details {
+  flex: 1;
+  margin: 0 16px;
 }
 
-.setup-resume-name {
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  color: #0f172a;
-  font-weight: 600;
+.file-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: #f8fafc;
+  margin: 0 0 2px 0;
+}
+
+.file-status {
+  font-size: 12px;
+  color: #6ee7b7;
   margin: 0;
 }
 
-.setup-change-resume-btn {
+.change-file-btn {
   padding: 8px 16px;
-  background-color: #f1f5f9;
-  border: 1px solid #cbd5e1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: #334155;
-  cursor: pointer;
+  color: #f1f5f9;
+  font-size: 13px;
   font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.setup-nav-buttons {
+.change-file-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ACTIONS BAR */
+.setup-actions-bar {
   display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-  margin-top: 24px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
 }
 
-.setup-back-btn {
+.nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   padding: 12px 28px;
-  background-color: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  color: #334155;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
   cursor: pointer;
-}
-
-.setup-next-btn {
-  padding: 12px 28px;
-  background-color: #2563eb;
-  color: #ffffff;
+  transition: all 0.25s ease;
   border: none;
-  border-radius: 8px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
-.setup-start-btn {
-  width: 100%;
-  padding: 14px 24px;
-  background-color: #2563eb;
+.back-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
-.setup-start-btn-disabled {
+.next-btn {
+  background: linear-gradient(135deg, #4f46e5 0%, #2563eb 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+}
+
+.next-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45);
+}
+
+.start-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+}
+
+.start-btn:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
+}
+
+.start-btn.disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.setup-preparing {
+.btn-arrow {
+  font-size: 20px;
+}
+
+.btn-sparkle {
+  font-size: 18px;
+}
+
+/* LOADING OVERLAY */
+.setup-loading-overlay {
+  max-width: 540px;
+  margin: 60px auto;
+  padding: 48px 36px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 60vh;
   text-align: center;
-  gap: 16px;
+  gap: 20px;
 }
 
-.setup-preparing-spinner {
-  color: #2563eb;
+.setup-spinner {
   width: 48px;
   height: 48px;
 }
 
-.setup-preparing-heading {
-  font-family: 'Bree Serif', serif;
-  font-size: 24px;
-  color: #0f172a;
+.loading-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c084fc;
+}
+
+.loading-sparkle {
+  font-size: 20px;
+}
+
+.loading-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: #f8fafc;
   margin: 0;
 }
 
-.setup-preparing-text {
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  color: #64748b;
+.loading-subtitle {
+  font-size: 14px;
+  color: #94a3b8;
   margin: 0;
-  max-width: 480px;
+  line-height: 1.5;
 }
 
-.setup-preparing-steps {
+.loading-steps-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 16px;
+  width: 100%;
+  margin: 8px 0;
 }
 
-.setup-prep-step {
+.loading-step-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  font-size: 13px;
+  color: #cbd5e1;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.5);
 }
 
-.setup-prep-step-icon-active {
-  font-size: 20px;
-  color: #16a34a;
+.step-icon {
+  font-size: 16px;
 }
 
-.setup-prep-step-icon-pending {
-  font-size: 20px;
-  color: #94a3b8;
+.done-icon {
+  color: #34d399;
 }
 
-.setup-prep-step-text {
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: #334155;
+.spin-icon {
+  color: #60a5fa;
+  animation: spin 2s linear infinite;
 }
 
-.setup-preparing-hint {
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  color: #94a3b8;
-  margin: 8px 0 0 0;
+.pending-icon {
+  color: #475569;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.loading-note {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
 }
 
 @media (max-width: 768px) {
   .setup-page {
-    padding: 24px 16px;
+    padding: 20px 16px;
   }
 
-  .setup-difficulty-row {
+  .setup-wizard-nav {
     flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
   }
 
-  .setup-step-indicator {
-    flex-wrap: wrap;
+  .wizard-connector {
+    display: none;
+  }
+
+  .setup-title {
+    font-size: 26px;
   }
 }

@@ -16,10 +16,11 @@
 }
 
 body {
-  font-family: "Roboto", sans-serif;
-  background-color: #f8fafc;
-  color: #334155;
+  font-family: "Outfit", "Inter", "Roboto", sans-serif;
+  background-color: #090d16;
+  color: #f8fafc;
   line-height: 1.6;
+  min-height: 100vh;
 }
 
 a {
@@ -272,10 +273,10 @@ select {
    ============================================ */
 .app-shell {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: #090d16;
 }
 
 .protected-shell {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: #090d16;
 }
