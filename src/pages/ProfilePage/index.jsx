@@ -21,11 +21,12 @@ import {
   BsFire,
   BsCalendarCheckFill,
 } from 'react-icons/bs';
+import { updateProfile } from '../../services/authService.js';
 import toast from 'react-hot-toast';
 import './index.css';
 
 function ProfilePage() {
-  const { user } = useContext(AuthContext);
+  const { user, updateUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
@@ -129,13 +130,34 @@ function ProfilePage() {
     }
   };
 
-  const handleSaveProfile = (e) => {
+  useEffect(() => {
+    if (user?.name) setName(user.name);
+    if (user?.targetRole) setTargetRole(user.targetRole);
+    if (user?.experienceLevel) setExperienceLevel(user.experienceLevel);
+  }, [user]);
+
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
+    if (!name.trim()) {
+      toast.error('Please provide a name');
+      return;
+    }
     setSaving(true);
-    setTimeout(() => {
-      setSaving(false);
+    try {
+      const updated = await updateProfile({
+        name: name.trim(),
+        targetRole,
+        experienceLevel,
+      });
+      if (updateUser) {
+        updateUser(updated);
+      }
       toast.success('Profile preferences updated successfully!');
-    }, 600);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update profile');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (

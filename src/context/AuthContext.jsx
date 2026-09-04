@@ -50,8 +50,13 @@ function AuthProvider({ children }) {
     setUser(null);
   };
 
+  // Update current user profile state in memory
+  const updateUser = (updatedData) => {
+    setUser((prev) => (prev ? { ...prev, ...updatedData } : updatedData));
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout: logoutUser }}>
+    <AuthContext.Provider value={{ user, loading, login, updateUser, logout: logoutUser }}>
       {children}
     </AuthContext.Provider>
   );

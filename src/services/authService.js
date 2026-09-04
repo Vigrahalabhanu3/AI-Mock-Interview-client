@@ -21,9 +21,14 @@ const getMe = async () => {
   return response.data.data;
 };
 
+const updateProfile = async (profileData) => {
+  const response = await API.put('/auth/profile', profileData);
+  return response.data.data;
+};
+
 const logout = async () => {
   const response = await API.post('/auth/logout');
   return response.data;
 };
 
-export { register, emailLogin, getMe, logout };
+export { register, emailLogin, getMe, updateProfile, logout };

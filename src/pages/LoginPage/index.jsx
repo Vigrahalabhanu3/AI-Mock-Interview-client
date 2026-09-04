@@ -66,7 +66,7 @@ function LoginPage() {
         toast.success('Account created successfully!');
       } else {
         result = await emailLogin(email, password);
-        toast.success('Welcome back!');
+        toast.success(`Welcome back, ${result.user?.name || 'Candidate'}!`);
       }
 
       login(result.token, result.user);
@@ -157,7 +157,7 @@ function LoginPage() {
                   id="name"
                   type="text"
                   className="login-input"
-                  placeholder="e.g. John Doe"
+                  placeholder="e.g. Alex Smith"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -206,9 +206,9 @@ function LoginPage() {
                 type="button"
                 className="demo-autofill-btn"
                 onClick={() => {
-                  setEmail('bhanu@test.com');
+                  setEmail('candidate.demo@example.com');
                   setPassword('Password123!');
-                  toast.success('Loaded demo test credentials');
+                  toast.success('Loaded test credentials for Candidate Demo');
                 }}
               >
                 <span>⚡ Fill Demo Credentials</span>
