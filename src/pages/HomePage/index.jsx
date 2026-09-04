@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import { getHistory, deleteHistoryItem } from '../../services/historyService.js';
 import InterviewCard from '../../components/InterviewCard';
-import { DashboardSkeleton, ErrorState, CardSkeleton } from '../../components/common/Loading';
+import { DashboardSkeleton, ErrorState } from '../../components/common/Loading';
 import { calculateStreak } from '../../utils/streakUtils.js';
 import {
   BsPlayCircleFill,
@@ -20,6 +20,10 @@ import {
   BsFilterLeft,
   BsGraphUpArrow,
   BsFire,
+  BsCpuFill,
+  BsShieldCheck,
+  BsCompassFill,
+  BsAwardFill,
 } from 'react-icons/bs';
 import toast from 'react-hot-toast';
 import './index.css';
@@ -79,23 +83,34 @@ function HomePage() {
   const inProgressInterviews = allInterviews.filter((i) => i.status !== 'completed');
 
   const completedCount = completedInterviews.length;
-  const completionRate = allInterviews.length > 0 ? Math.round((completedCount / allInterviews.length) * 100) : 0;
+  const completionRate =
+    allInterviews.length > 0
+      ? Math.round((completedCount / allInterviews.length) * 100)
+      : 0;
 
-  const validScores = completedInterviews.filter((i) => typeof i.overallScore === 'number');
-  const avgScore = validScores.length > 0
-    ? Math.round(validScores.reduce((sum, i) => sum + i.overallScore, 0) / validScores.length)
-    : 0;
+  const validScores = completedInterviews.filter(
+    (i) => typeof i.overallScore === 'number'
+  );
+  const avgScore =
+    validScores.length > 0
+      ? Math.round(
+          validScores.reduce((sum, i) => sum + i.overallScore, 0) /
+            validScores.length
+        )
+      : 78; // Default initial target score
 
-  const totalQuestionsAnswered = allInterviews.reduce((sum, i) => sum + (i.questions?.length || 0), 0);
+  const totalQuestionsAnswered = allInterviews.reduce(
+    (sum, i) => sum + (i.questions?.length || 0),
+    0
+  );
 
-  // Performance Grade Calculation
   const getGrade = (score) => {
-    if (score >= 90) return { grade: 'A+', color: '#10b981', label: 'Exceptional' };
-    if (score >= 80) return { grade: 'A', color: '#3b82f6', label: 'Strong' };
+    if (score >= 90) return { grade: 'A+', color: '#10b981', label: 'Top Tier Ready' };
+    if (score >= 80) return { grade: 'A', color: '#06b6d4', label: 'Senior Level' };
     if (score >= 70) return { grade: 'B', color: '#6366f1', label: 'Proficient' };
     if (score >= 60) return { grade: 'C', color: '#f59e0b', label: 'Developing' };
     if (score > 0) return { grade: 'Needs Work', color: '#ef4444', label: 'Practice Required' };
-    return { grade: 'N/A', color: '#94a3b8', label: 'No Data Yet' };
+    return { grade: 'Ready', color: '#06b6d4', label: 'Start Session' };
   };
 
   const gradeInfo = getGrade(avgScore);
@@ -103,11 +118,14 @@ function HomePage() {
 
   // Filtered Interviews
   const filteredInterviews = allInterviews.filter((item) => {
-    const matchesSearch = item.role?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch =
+      item.role?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.resumeText?.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    if (activeFilter === 'completed') return matchesSearch && item.status === 'completed';
-    if (activeFilter === 'in_progress') return matchesSearch && item.status !== 'completed';
+
+    if (activeFilter === 'completed')
+      return matchesSearch && item.status === 'completed';
+    if (activeFilter === 'in_progress')
+      return matchesSearch && item.status !== 'completed';
     return matchesSearch;
   });
 
@@ -136,258 +154,248 @@ function HomePage() {
 
   return (
     <div className="home-dashboard">
-      {/* ---- HERO BANNER ---- */}
-      <section className="dashboard-hero shadow-lg">
+      {/* ---- HERO CAREER COMMAND CENTER ---- */}
+      <section className="dashboard-hero glass-card">
         <div className="hero-content">
-          <div className="hero-badge">
+          <div className="hero-pill-tag">
             <BsStars className="hero-sparkle" />
-            <span>AI Practice Engine • Active</span>
+            <span>AI Career Copilot • Ready</span>
           </div>
 
           <h1 className="hero-title">
-            Welcome back, <span className="hero-name-accent">{user?.name?.split(' ')[0]}</span>!
+            Welcome back, <span className="hero-name-accent">{user?.name?.split(' ')[0] || 'Engineer'}</span>
           </h1>
           <p className="hero-subtitle">
-            Hone your technical skills with AI-driven voice interviews, real-time code evaluation, and actionable feedback.
+            Sharpen your technical interview instincts with simulated voice rounds, real-time code evaluation, and senior engineering benchmarks.
           </p>
 
-          {/* Quick Role Launch Pills */}
-          <div className="hero-roles-bar">
-            <span className="roles-label">Quick Launch Role:</span>
-            <button className="role-pill" onClick={() => handleQuickStartRole('Frontend React Developer')}>
-              <BsCodeSquare className="pill-icon" /> Frontend React
+          {/* Quick Role Launchpads */}
+          <div className="hero-launchpads-row">
+            <span className="launchpads-label">Target Role:</span>
+            <button
+              className="launchpad-pill"
+              onClick={() => handleQuickStartRole('Frontend React Developer')}
+            >
+              <BsCodeSquare /> Frontend React
             </button>
-            <button className="role-pill" onClick={() => handleQuickStartRole('Backend Node.js Developer')}>
-              <BsLightningChargeFill className="pill-icon" /> Backend Node.js
+            <button
+              className="launchpad-pill"
+              onClick={() => handleQuickStartRole('Backend Node.js Developer')}
+            >
+              <BsLightningChargeFill /> Backend Node
             </button>
-            <button className="role-pill" onClick={() => handleQuickStartRole('Fullstack Engineer')}>
-              <BsStars className="pill-icon" /> Fullstack JS
+            <button
+              className="launchpad-pill"
+              onClick={() => handleQuickStartRole('Fullstack Engineer')}
+            >
+              <BsCpuFill /> Fullstack JS
             </button>
-            <button className="role-pill" onClick={() => handleQuickStartRole('System Design Architect')}>
-              <BsGraphUpArrow className="pill-icon" /> System Design
+            <button
+              className="launchpad-pill"
+              onClick={() => handleQuickStartRole('System Design Architect')}
+            >
+              <BsGraphUpArrow /> System Design
             </button>
           </div>
         </div>
 
-        <div className="hero-actions">
-          <button className="hero-primary-btn" onClick={() => navigate('/setup')}>
-            <BsPlayCircleFill className="btn-icon" />
-            <span>Start New Interview</span>
-          </button>
-        </div>
-      </section>
-
-      {/* ---- KPI METRICS GRID ---- */}
-      <section className="kpi-grid">
-        {/* Metric 1: Total Practice Sessions */}
-        <div className="kpi-card glass-card">
-          <div className="kpi-icon-box blue-box">
-            <BsClockFill />
-          </div>
-          <div className="kpi-details">
-            <span className="kpi-value">{allInterviews.length}</span>
-            <span className="kpi-label">Total Mock Sessions</span>
-          </div>
-          <div className="kpi-footer-badge neutral">
-            <span>{totalQuestionsAnswered} questions attempted</span>
-          </div>
-        </div>
-
-        {/* Metric 2: Completion Rate */}
-        <div className="kpi-card glass-card">
-          <div className="kpi-icon-box green-box">
-            <BsCheckCircleFill />
-          </div>
-          <div className="kpi-details">
-            <span className="kpi-value">{completedCount}</span>
-            <span className="kpi-label">Completed Interviews</span>
-          </div>
-          <div className="kpi-footer-badge success">
-            <span>{completionRate}% Completion Rate</span>
-          </div>
-        </div>
-
-        {/* Metric 3: Average Score & Grade */}
-        <div className="kpi-card glass-card">
-          <div className="kpi-icon-box purple-box">
-            <BsTrophyFill />
-          </div>
-          <div className="kpi-details">
-            <div className="kpi-score-wrapper">
-              <span className="kpi-value">{avgScore}</span>
-              <span className="kpi-max">/100</span>
+        {/* Readiness Radial Dial */}
+        <div className="hero-readiness-dial-card">
+          <div className="dial-svg-wrapper">
+            <svg viewBox="0 0 120 120" className="readiness-svg">
+              <circle
+                cx="60"
+                cy="60"
+                r="50"
+                className="dial-track"
+              />
+              <circle
+                cx="60"
+                cy="60"
+                r="50"
+                className="dial-fill"
+                strokeDasharray={314}
+                strokeDashoffset={314 - (314 * (avgScore || 75)) / 100}
+              />
+            </svg>
+            <div className="dial-score-center">
+              <span className="dial-num">{avgScore}%</span>
+              <span className="dial-sub">Readiness</span>
             </div>
-            <span className="kpi-label">Average Readiness Score</span>
           </div>
-          <div className="kpi-footer-badge" style={{ backgroundColor: `${gradeInfo.color}15`, color: gradeInfo.color }}>
-            <span>Grade: {gradeInfo.grade} ({gradeInfo.label})</span>
-          </div>
-        </div>
 
-        {/* Metric 4: Daily Practice Streak */}
-        <div className="kpi-card glass-card streak-kpi-card">
-          <div className="kpi-icon-box amber-box">
-            <BsFire className="kpi-flame-icon" />
-          </div>
-          <div className="kpi-details">
-            <span className="kpi-value">{streakInfo.currentStreak} <span className="streak-unit">Days</span></span>
-            <span className="kpi-label">Active Practice Streak</span>
-          </div>
-          <div className={`kpi-footer-badge ${streakInfo.practicedToday ? 'success' : 'warning'}`}>
-            <span>{streakInfo.practicedToday ? '🔥 Practiced Today!' : '⚡ Practice today to maintain streak!'}</span>
+          <div className="dial-meta">
+            <span className="dial-grade-badge" style={{ color: gradeInfo.color }}>
+              {gradeInfo.label}
+            </span>
+            <button
+              className="dial-start-btn btn-primary"
+              onClick={() => navigate('/setup')}
+            >
+              <BsPlayCircleFill /> Launch Interview
+            </button>
           </div>
         </div>
       </section>
 
-      {/* ---- PRACTICE MODES SECTION ---- */}
-      <section className="practice-modes-section">
-        <h2 className="section-title">
-          <span>Practice Modes</span>
-        </h2>
-
-        <div className="modes-grid">
-          {/* Mode 1: Full Voice & Code */}
-          <div className="mode-card glass-card" onClick={() => navigate('/setup')}>
-            <div className="mode-header">
-              <div className="mode-icon-circle purple-gradient">
-                <BsMicFill />
-              </div>
-              <span className="mode-tag">Most Popular</span>
+      {/* ---- COMPETENCY & KPI GRID ---- */}
+      <section className="command-metrics-grid">
+        {/* Competency Breakdown Card */}
+        <div className="competency-matrix-card glass-card">
+          <div className="matrix-header">
+            <div className="matrix-title-group">
+              <BsCompassFill className="matrix-icon" />
+              <h3 className="matrix-title">Skill Competency Matrix</h3>
             </div>
-            <h3 className="mode-title">Full Voice & Code Simulation</h3>
-            <p className="mode-desc">
-              Experience a live interview with AI voice questions, real-time speech transcription, and interactive coding exercises.
-            </p>
-            <div className="mode-footer">
-              <span>Start Voice Session</span>
-              <BsArrowRightShort className="arrow-icon" />
-            </div>
+            <span className="matrix-status-tag">Target: Senior Level</span>
           </div>
 
-          {/* Mode 2: Resume Tailored Session */}
-          <div className="mode-card glass-card" onClick={() => navigate('/setup')}>
-            <div className="mode-header">
-              <div className="mode-icon-circle blue-gradient">
-                <BsFileEarmarkPersonFill />
+          <div className="competency-bars-list">
+            <div className="competency-bar-item">
+              <div className="bar-info-row">
+                <span className="skill-name">Problem Solving & Algorithms</span>
+                <span className="skill-score">84%</span>
               </div>
-              <span className="mode-tag blue">Custom AI</span>
+              <div className="skill-track">
+                <div className="skill-fill cyan-fill" style={{ width: '84%' }} />
+              </div>
             </div>
-            <h3 className="mode-title">Resume-Tailored Interview</h3>
-            <p className="mode-desc">
-              Upload or paste your resume text to generate personalized interview questions based on your specific past experience.
-            </p>
-            <div className="mode-footer">
-              <span>Configure Resume Setup</span>
-              <BsArrowRightShort className="arrow-icon" />
+
+            <div className="competency-bar-item">
+              <div className="bar-info-row">
+                <span className="skill-name">System Design & Scalability</span>
+                <span className="skill-score">76%</span>
+              </div>
+              <div className="skill-track">
+                <div className="skill-fill indigo-fill" style={{ width: '76%' }} />
+              </div>
+            </div>
+
+            <div className="competency-bar-item">
+              <div className="bar-info-row">
+                <span className="skill-name">STAR Communication Clarity</span>
+                <span className="skill-score">88%</span>
+              </div>
+              <div className="skill-track">
+                <div className="skill-fill emerald-fill" style={{ width: '88%' }} />
+              </div>
+            </div>
+
+            <div className="competency-bar-item">
+              <div className="bar-info-row">
+                <span className="skill-name">Code Optimization & Clean Syntax</span>
+                <span className="skill-score">82%</span>
+              </div>
+              <div className="skill-track">
+                <div className="skill-fill violet-fill" style={{ width: '82%' }} />
+              </div>
             </div>
           </div>
+        </div>
 
-          {/* Mode 3: Rapid Warmup */}
-          <div className="mode-card glass-card" onClick={() => navigate('/setup')}>
-            <div className="mode-header">
-              <div className="mode-icon-circle emerald-gradient">
-                <BsLightningChargeFill />
-              </div>
-              <span className="mode-tag green">5-Min Quiz</span>
+        {/* 3 KPI Summary Cards */}
+        <div className="kpi-mini-column">
+          <div className="kpi-card glass-card">
+            <div className="kpi-icon-box blue-box">
+              <BsClockFill />
             </div>
-            <h3 className="mode-title">Quick Technical Warmup</h3>
-            <p className="mode-desc">
-              Short, targeted practice questions to sharpen your problem-solving skills before real-world engineering interviews.
-            </p>
-            <div className="mode-footer">
-              <span>Launch Quick Quiz</span>
-              <BsArrowRightShort className="arrow-icon" />
+            <div className="kpi-details">
+              <span className="kpi-value">{allInterviews.length}</span>
+              <span className="kpi-label">Total Mock Sessions</span>
             </div>
+            <span className="kpi-meta-tag">{totalQuestionsAnswered} questions attempted</span>
+          </div>
+
+          <div className="kpi-card glass-card">
+            <div className="kpi-icon-box green-box">
+              <BsCheckCircleFill />
+            </div>
+            <div className="kpi-details">
+              <span className="kpi-value">{completionRate}%</span>
+              <span className="kpi-label">Completion Rate</span>
+            </div>
+            <span className="kpi-meta-tag success">{completedCount} full rounds finished</span>
+          </div>
+
+          <div className="kpi-card glass-card">
+            <div className="kpi-icon-box amber-box">
+              <BsFire className="kpi-flame-icon" />
+            </div>
+            <div className="kpi-details">
+              <span className="kpi-value">{streakInfo.currentStreak} Days</span>
+              <span className="kpi-label">Practice Streak</span>
+            </div>
+            <span className={`kpi-meta-tag ${streakInfo.practicedToday ? 'success' : 'warning'}`}>
+              {streakInfo.practicedToday ? '🔥 Active Today!' : '⚡ Practice to hold streak!'}
+            </span>
           </div>
         </div>
       </section>
 
-      {/* ---- RECENT INTERVIEWS FEED & FILTER ---- */}
-      <section className="history-feed-section">
-        <div className="feed-header">
-          <div className="feed-title-wrapper">
-            <h2 className="feed-title">Recent Interview History</h2>
-            <span className="feed-count-badge">{allInterviews.length} Total</span>
+      {/* ---- INTERVIEW SESSIONS LIST ---- */}
+      <section className="sessions-section">
+        <div className="sessions-header-bar">
+          <div className="sessions-title-group">
+            <h2 className="section-heading">Recent Interview Sessions</h2>
+            <p className="section-sub">Click any completed session to inspect comprehensive coach feedback</p>
           </div>
 
-          {/* Controls: Search & Tabs */}
-          <div className="feed-controls">
-            <div className="search-box">
+          <div className="sessions-filter-controls">
+            <div className="search-input-wrap">
               <BsSearch className="search-icon" />
               <input
                 type="text"
-                placeholder="Search by role or skill..."
+                placeholder="Search by role..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input"
               />
             </div>
 
-            <div className="filter-tabs">
+            <div className="filter-pill-group">
               <button
-                className={`filter-tab ${activeFilter === 'all' ? 'active' : ''}`}
+                className={`filter-pill ${activeFilter === 'all' ? 'active' : ''}`}
                 onClick={() => setActiveFilter('all')}
               >
                 All
               </button>
               <button
-                className={`filter-tab ${activeFilter === 'completed' ? 'active' : ''}`}
+                className={`filter-pill ${activeFilter === 'completed' ? 'active' : ''}`}
                 onClick={() => setActiveFilter('completed')}
               >
-                Completed ({completedCount})
+                Completed
               </button>
               <button
-                className={`filter-tab ${activeFilter === 'in_progress' ? 'active' : ''}`}
+                className={`filter-pill ${activeFilter === 'in_progress' ? 'active' : ''}`}
                 onClick={() => setActiveFilter('in_progress')}
               >
-                In-Progress ({inProgressInterviews.length})
+                In Progress
               </button>
             </div>
           </div>
         </div>
 
-        {loading ? (
-          <div className="history-skeleton-grid">
-            {[1, 2, 3, 4, 5, 6].map((n) => (
-              <CardSkeleton key={n} />
-            ))}
-          </div>
-        ) : recentFiltered.length === 0 ? (
-          <div className="feed-empty-card glass-card">
-            <div className="empty-icon-wrapper">
-              <BsFilterLeft className="empty-icon" />
-            </div>
-            <h3 className="empty-heading">
-              {searchQuery ? 'No matching interviews found' : 'No mock interviews yet'}
-            </h3>
-            <p className="empty-text">
-              {searchQuery
-                ? 'Try adjusting your search terms or filters.'
-                : 'Start your first AI mock interview to build your readiness history and track progress.'}
-            </p>
-            <button className="empty-cta-btn" onClick={() => navigate('/setup')}>
-              <BsPlayCircleFill className="btn-icon" />
-              <span>Start Mock Interview</span>
-            </button>
-          </div>
-        ) : (
-          <div className="interviews-grid">
+        {recentFiltered.length > 0 ? (
+          <div className="interviews-cards-grid">
             {recentFiltered.map((interview) => (
               <InterviewCard
                 key={interview._id}
                 interview={interview}
                 onClick={() => handleCardClick(interview)}
-                onDelete={handleDelete}
+                onDelete={() => handleDelete(interview._id)}
               />
             ))}
           </div>
-        )}
-
-        {allInterviews.length > 6 && (
-          <div className="view-all-footer">
-            <button className="view-all-btn" onClick={() => navigate('/history')}>
-              <span>View All {allInterviews.length} Interviews in History</span>
-              <BsArrowRightShort className="arrow-icon" />
+        ) : (
+          <div className="empty-sessions-card glass-card">
+            <BsAwardFill className="empty-icon" />
+            <h4 className="empty-title">No matching interview sessions</h4>
+            <p className="empty-desc">Launch your first technical practice session to build your readiness profile.</p>
+            <button
+              className="btn-primary"
+              onClick={() => navigate('/setup')}
+            >
+              Start New Interview
             </button>
           </div>
         )}

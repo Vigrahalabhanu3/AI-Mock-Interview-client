@@ -1,187 +1,289 @@
 /* ============================================
-   App.css - Global Styles (Ocean Blue Palette)
-   ============================================
-   Skills-compliant: No CSS variables, no animations,
-   no transitions, no transforms, no pseudo-classes.
-   Reference: reference-frontend.md (CSS properties)
+   App.css - Next-Gen Modern Cyber-Luxe Design System
    ============================================ */
 
-@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
-/* Reset (skills-compliant) */
-* {
+:root {
+  /* Color Palette - Deep Obsidian & Electric Accents */
+  --bg-primary: #070a13;
+  --bg-secondary: #0d1322;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --bg-card-hover: rgba(22, 33, 62, 0.85);
+  --bg-elevated: #111a30;
+  
+  /* Primary Glow & Brand Accents */
+  --accent-cyan: #06b6d4;
+  --accent-cyan-glow: rgba(6, 182, 212, 0.25);
+  --accent-indigo: #6366f1;
+  --accent-indigo-glow: rgba(99, 102, 241, 0.25);
+  --accent-violet: #8b5cf6;
+  --accent-emerald: #10b981;
+  --accent-emerald-glow: rgba(16, 185, 129, 0.2);
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+  
+  /* Neutral Gradients & Borders */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(6, 182, 212, 0.45);
+  --border-glow: rgba(99, 102, 241, 0.4);
+  
+  /* Typography Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #020617;
+  
+  /* Fonts */
+  --font-sans: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  
+  /* Shadows & Glass */
+  --glass-blur: blur(16px);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --shadow-neon-cyan: 0 0 24px rgba(6, 182, 212, 0.25);
+  --shadow-neon-indigo: 0 0 24px rgba(99, 102, 241, 0.25);
+  
+  /* Transitions */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset & Base Rules */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
 body {
-  font-family: "Outfit", "Inter", "Roboto", sans-serif;
-  background-color: #090d16;
-  color: #f8fafc;
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+    radial-gradient(at 90% 0%, rgba(6, 182, 212, 0.1) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.4);
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
 button {
   cursor: pointer;
-  border-style: none;
+  border: none;
   outline: none;
   font-family: inherit;
+  transition: all var(--transition-normal);
 }
 
-input,
-textarea,
-select {
+input, textarea, select {
   font-family: inherit;
   outline: none;
+  color: var(--text-primary);
 }
 
 /* ============================================
-   Shared Button Classes
-   Reference: ui-patterns.md (Button Patterns)
+   Glassmorphic & Card Utilities
+   ============================================ */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.card-glow-cyan {
+  position: relative;
+}
+.card-glow-cyan::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 17px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.5), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ============================================
+   Modern Button Classes
    ============================================ */
 .btn-primary {
-  background-color: #2563eb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
   color: #ffffff;
-  font-family: "Roboto";
+  font-weight: 600;
   font-size: 14px;
-  font-weight: 700;
   padding: 12px 24px;
-  border-radius: 8px;
-  border-style: none;
-  cursor: pointer;
-  outline: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1d4ed8, #0891b2);
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .btn-primary-lg {
-  background-color: #2563eb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
   color: #ffffff;
-  font-family: "Roboto";
-  font-size: 16px;
   font-weight: 700;
+  font-size: 16px;
   padding: 14px 32px;
-  border-radius: 8px;
-  border-style: none;
-  cursor: pointer;
-  outline: none;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(79, 70, 229, 0.4);
+}
+
+.btn-primary-lg:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(6, 182, 212, 0.5);
 }
 
 .btn-outline {
-  background-color: transparent;
-  color: #2563eb;
-  font-family: "Roboto";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  font-weight: 600;
   font-size: 14px;
-  font-weight: 700;
-  padding: 12px 24px;
-  border-radius: 8px;
-  border-style: solid;
-  border-width: 2px;
-  border-color: #2563eb;
-  cursor: pointer;
-  outline: none;
+  padding: 11px 22px;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(8px);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: var(--accent-cyan);
+  transform: translateY(-1px);
 }
 
 .btn-danger {
-  background-color: #dc2626;
+  background: linear-gradient(135deg, #dc2626, #f43f5e);
   color: #ffffff;
-  font-family: "Roboto";
+  font-weight: 600;
   font-size: 14px;
-  font-weight: 700;
   padding: 12px 24px;
-  border-radius: 8px;
-  border-style: none;
-  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
 }
 
-.btn-danger-text {
-  background-color: transparent;
-  color: #dc2626;
-  font-family: "Roboto";
-  font-size: 14px;
-  font-weight: 700;
-  padding: 8px 16px;
-  border-style: none;
-  cursor: pointer;
+.btn-danger:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(244, 63, 94, 0.4);
 }
 
-.btn-disabled {
-  opacity: 0.5;
+.btn-disabled, button:disabled {
+  opacity: 0.45;
   cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* ============================================
-   Shared Badge Classes
-   Reference: text-highlight-patterns.md (Method 4)
+   Badges & Indicators
    ============================================ */
 .badge {
-  background-color: #dbeafe;
-  color: #1d4ed8;
-  font-family: "Roboto";
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.3);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   padding: 4px 12px;
-  border-radius: 100px;
-  display: inline-block;
+  border-radius: 20px;
 }
 
 .badge-success {
-  background-color: #dcfce7;
-  color: #16a34a;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.3);
 }
 
 .badge-warning {
-  background-color: #fef3c7;
-  color: #d97706;
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.3);
 }
 
 .badge-error {
-  background-color: #fee2e2;
-  color: #dc2626;
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.badge-cyan {
+  background: rgba(6, 182, 212, 0.15);
+  color: #22d3ee;
+  border-color: rgba(6, 182, 212, 0.3);
 }
 
 /* ============================================
-   Shared Callout Classes
-   Reference: text-highlight-patterns.md (Method 5)
-   ============================================ */
-.callout {
-  border-style: solid;
-  border-width: 0px;
-  border-left-width: 4px;
-  border-color: #2563eb;
-  background-color: #f8fafc;
-  padding: 16px 20px;
-  border-radius: 0px 8px 8px 0px;
-}
-
-.callout-success {
-  border-color: #16a34a;
-  background-color: #f0fdf4;
-}
-
-.callout-warning {
-  border-color: #d97706;
-  background-color: #fffbeb;
-}
-
-.callout-error {
-  border-color: #dc2626;
-  background-color: #fef2f2;
-}
-
-.callout-info {
-  border-color: #0891b2;
-  background-color: #ecfeff;
-}
-
-/* ============================================
-   Shared Form Classes
-   Reference: ui-patterns.md (Form Design)
+   Form Inputs & Controls
    ============================================ */
 .form-group {
   display: flex;
@@ -190,44 +292,97 @@ select {
 }
 
 .form-label {
-  font-family: "Roboto";
-  font-size: 14px;
-  font-weight: 700;
-  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
   margin-bottom: 8px;
 }
 
 .form-input {
-  font-family: "Roboto";
-  font-size: 16px;
+  font-size: 15px;
   padding: 12px 16px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #cbd5e1;
-  border-radius: 8px;
-  color: #0f172a;
-  background-color: #ffffff;
-  outline: none;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  color: var(--text-primary);
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  transition: all var(--transition-fast);
+}
+
+.form-input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px var(--accent-cyan-glow);
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
 }
 
 /* ============================================
    Shared Card Classes
-   Reference: ui-patterns.md (Card Design Pattern)
    ============================================ */
 .card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #e2e8f0;
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
   padding: 24px;
+  box-shadow: var(--shadow-sm);
 }
 
 /* ============================================
-   Loading State (Bootstrap Spinner)
-   UI NOTE: Using Bootstrap spinner-border pattern
-   since custom @keyframes are not in student refs.
+   Pulse & Shimmer Animations
    ============================================ */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.6), 0 0 50px rgba(99, 102, 241, 0.3);
+  }
+}
+
+@keyframes rippleWave {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* ============================================
+   App Shell & Containers
+   ============================================ */
+.app-shell {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+.protected-shell {
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+/* Loading Containers */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -238,14 +393,11 @@ select {
 }
 
 .loading-container p {
-  font-family: "Roboto";
-  font-size: 16px;
-  color: #64748b;
+  font-size: 15px;
+  color: var(--text-secondary);
 }
 
-/* ============================================
-   Empty State
-   ============================================ */
+/* Empty State */
 .empty-container {
   display: flex;
   flex-direction: column;
@@ -257,26 +409,12 @@ select {
 }
 
 .empty-container h3 {
-  font-family: "Bree Serif";
   font-size: 20px;
-  color: #0f172a;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .empty-container p {
-  font-family: "Roboto";
   font-size: 14px;
-  color: #64748b;
-}
-
-/* ============================================
-   App Shell
-   ============================================ */
-.app-shell {
-  min-height: 100vh;
-  background-color: #090d16;
-}
-
-.protected-shell {
-  min-height: 100vh;
-  background-color: #090d16;
+  color: var(--text-secondary);
 }

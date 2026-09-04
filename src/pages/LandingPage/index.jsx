@@ -1,6 +1,7 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext.jsx';
+import AudioWaveformVisualizer from '../../components/AudioWaveformVisualizer';
 import {
   BsCameraVideoFill,
   BsMicFill,
@@ -11,12 +12,12 @@ import {
   BsArrowRightShort,
   BsShieldCheck,
   BsCheckCircleFill,
-  BsCheck2Circle,
   BsCpuFill,
   BsAwardFill,
   BsLightningChargeFill,
-  BsLaptop,
-  BsPersonBadgeFill,
+  BsPlayFill,
+  BsVolumeUpFill,
+  BsCheck2Circle,
 } from 'react-icons/bs';
 import './index.css';
 
@@ -24,11 +25,41 @@ function LandingPage() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const [demoPlaying, setDemoPlaying] = useState(false);
+  const [demoCodeRan, setDemoCodeRan] = useState(false);
+
   // If user is already logged in, redirect directly to dashboard
   if (user) {
-    navigate('/', { replace: true });
+    navigate('/dashboard', { replace: true });
     return null;
   }
+
+  const handleTestVoice = () => {
+    if (demoPlaying) {
+      setDemoPlaying(false);
+      window.speechSynthesis?.cancel();
+      return;
+    }
+
+    setDemoPlaying(true);
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(
+        "Hi there! Welcome to your AI mock interview. Can you explain how you design high-throughput event-driven microservices?"
+      );
+      utterance.rate = 1.0;
+      utterance.pitch = 1.05;
+      utterance.onend = () => setDemoPlaying(false);
+      utterance.onerror = () => setDemoPlaying(false);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      setTimeout(() => setDemoPlaying(false), 4000);
+    }
+  };
+
+  const handleTestRunCode = () => {
+    setDemoCodeRan(true);
+  };
 
   return (
     <div className="landing-page">
@@ -39,8 +70,8 @@ function LandingPage() {
             <BsCameraVideoFill className="landing-logo-icon" />
           </div>
           <div className="landing-brand-text">
-            <span className="landing-brand-title">AI Mock Interview</span>
-            <span className="landing-brand-tag">Pro Platform</span>
+            <span className="landing-brand-title">MockAI Studio</span>
+            <span className="landing-brand-tag">Principal Copilot</span>
           </div>
         </div>
 
@@ -52,7 +83,7 @@ function LandingPage() {
             Sign In
           </button>
           <button
-            className="landing-btn-signup"
+            className="landing-btn-signup btn-primary"
             onClick={() => navigate('/login?mode=signup')}
           >
             <span>Get Started Free</span>
@@ -65,20 +96,20 @@ function LandingPage() {
       <section className="landing-hero">
         <div className="hero-pill-badge">
           <BsStars className="pill-star-icon" />
-          <span>Powered by Gemini AI • Real-Time Voice & Code Evaluation</span>
+          <span>Next-Gen AI Interview Cockpit • Real-Time Voice & Video Telepresence</span>
         </div>
 
         <h1 className="landing-hero-title">
-          Master Technical Interviews with Your <span className="hero-gradient-text">Personal AI Coach</span>
+          Conquer Tech Screenings with Your <span className="hero-gradient-text">Personal AI Evaluator</span>
         </h1>
 
         <p className="landing-hero-subtitle">
-          Simulate realistic voice interviews, parse your PDF resume for targeted questions, execute live code solutions, and get instant performance scorecards.
+          Experience hyper-realistic voice interviews, upload your resume for tailored technical deep-dives, write live code solutions, and get instant senior engineering feedback scorecards.
         </p>
 
         <div className="landing-cta-group">
           <button
-            className="landing-primary-cta"
+            className="landing-primary-cta btn-primary-lg"
             onClick={() => navigate('/login?mode=signup')}
           >
             <BsLightningChargeFill className="cta-icon" />
@@ -86,156 +117,177 @@ function LandingPage() {
             <BsArrowRightShort className="cta-arrow" />
           </button>
           <button
-            className="landing-secondary-cta"
+            className="landing-secondary-cta btn-outline"
             onClick={() => navigate('/login?mode=login')}
           >
-            <span>Already have an account? Log In</span>
+            <span>Sign In to Existing Account</span>
           </button>
         </div>
 
-        {/* Hero Mock UI Visual Card */}
-        <div className="landing-preview-frame glass-card shadow-2xl">
+        {/* Interactive Hero Cockpit Simulator */}
+        <div className="landing-cockpit-frame glass-card">
           <div className="frame-header-bar">
             <div className="frame-dots">
               <span className="dot red" />
               <span className="dot yellow" />
               <span className="dot green" />
             </div>
-            <span className="frame-title">AI Interview Room Preview • Live Session</span>
+            <span className="frame-title">Interactive AI Interview Cockpit • Live Simulation</span>
+            <div className="frame-status-live">
+              <span className="live-dot" /> LIVE ENGINE
+            </div>
           </div>
 
-          <div className="frame-body">
-            <div className="preview-panel-left">
-              <div className="preview-ai-avatar">
-                <div className="avatar-icon-circle">
-                  <BsPersonBadgeFill className="avatar-icon" />
+          <div className="frame-body-grid">
+            {/* Left Simulator: AI Interviewer */}
+            <div className="simulator-interviewer-pane">
+              <div className="sim-avatar-header">
+                <div className={`sim-avatar-orb ${demoPlaying ? 'is-active' : ''}`}>
+                  <span>AI</span>
                 </div>
-                <div className="avatar-details">
-                  <span className="avatar-name">Natalie</span>
-                  <span className="avatar-status">AI Senior Technical Interviewer</span>
+                <div className="sim-avatar-meta">
+                  <span className="sim-avatar-name">Natalie</span>
+                  <span className="sim-avatar-role">Principal Tech Evaluator</span>
                 </div>
               </div>
 
-              <div className="preview-question-box">
-                <span className="preview-badge">Question 1 of 5 • Technical</span>
-                <p className="preview-q-text">
-                  "Explain how React's virtual DOM reconciliation works under the hood, and how key props optimize list rendering."
+              <div className="sim-waveform-box">
+                <AudioWaveformVisualizer
+                  mode="ai"
+                  isActive={demoPlaying}
+                  height={44}
+                />
+              </div>
+
+              <div className="sim-question-card">
+                <span className="sim-q-badge">Question 1 • System Architecture</span>
+                <p className="sim-q-text">
+                  "Can you explain how you design high-throughput event-driven microservices, and how you handle idempotent consumers during network partitions?"
                 </p>
               </div>
+
+              <button
+                type="button"
+                className={`sim-voice-test-btn ${demoPlaying ? 'btn-playing' : ''}`}
+                onClick={handleTestVoice}
+              >
+                <BsVolumeUpFill />
+                <span>{demoPlaying ? 'Stop AI Voice Sample' : 'Click to Hear AI Interviewer'}</span>
+              </button>
             </div>
 
-            <div className="preview-panel-right">
-              <div className="preview-code-header">
-                <BsCodeSlash className="code-icon" />
-                <span>JavaScript Code Editor</span>
+            {/* Right Simulator: Code Studio */}
+            <div className="simulator-code-pane">
+              <div className="sim-code-header">
+                <div className="sim-code-tab">
+                  <BsCodeSlash className="tab-code-icon" />
+                  <span>consumerHandler.js</span>
+                </div>
+                <button
+                  type="button"
+                  className="sim-run-code-btn"
+                  onClick={handleTestRunCode}
+                >
+                  <BsPlayFill /> {demoCodeRan ? 'Evaluated (100/100)' : 'Run & Test Code'}
+                </button>
               </div>
-              <pre className="preview-code-box">
-{`function reconcileList(prevList, nextList) {
-  // AI evaluating code syntax & time complexity...
-  const keyMap = new Map();
-  prevList.forEach((item) => keyMap.set(item.key, item));
-  return nextList.map(item => keyMap.get(item.key) || item);
+
+              <pre className="sim-code-editor">
+{`// Idempotent Kafka / SQS consumer handler
+async function handleOrderEvent(event, db) {
+  const { eventId, orderId, payload } = event;
+  const exists = await db.processedEvents.findOne({ eventId });
+  if (exists) return { status: 'deduplicated' };
+
+  await db.orders.updateOne({ orderId }, { $set: payload }, { upsert: true });
+  await db.processedEvents.insertOne({ eventId, processedAt: new Date() });
+  return { status: 'success' };
 }`}
               </pre>
+
+              {demoCodeRan && (
+                <div className="sim-code-feedback-toast">
+                  <BsCheck2Circle className="feedback-check" />
+                  <span>Passed all 3 unit assertions! Idempotency key checked before state mutation.</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ---- Features Grid ---- */}
+      {/* ---- Platform Capabilities Grid ---- */}
       <section className="landing-features-section">
         <div className="section-header text-center">
-          <span className="section-kicker">Platform Capabilities</span>
-          <h2 className="section-title">Everything You Need to Win Offers</h2>
+          <span className="section-kicker">Engineered For Offers</span>
+          <h2 className="section-title">Everything You Need to Win Top-Tier Roles</h2>
           <p className="section-desc">
-            Designed to bridge the gap between technical knowledge and real-time interview pressure.
+            Bridges the divide between isolated practice and the real pressure of technical interview loops.
           </p>
         </div>
 
         <div className="features-grid">
           <div className="feature-card glass-card">
-            <div className="feature-icon-box blue">
+            <div className="feature-icon-box cyan-glow">
               <BsMicFill />
             </div>
-            <h3 className="feature-title">Interactive Voice Engine</h3>
+            <h3 className="feature-title">Real-Time Voice & Waveforms</h3>
             <p className="feature-text">
-              Natural speech synthesis and voice recognition lets you converse with your interviewer hands-free.
+              Natural speech synthesis and reactive frequency spectrums simulate a conversational phone or video screen.
             </p>
           </div>
 
           <div className="feature-card glass-card">
-            <div className="feature-icon-box green">
+            <div className="feature-icon-box emerald-glow">
+              <BsCameraVideoFill />
+            </div>
+            <h3 className="feature-title">Candidate Telepresence Mirror</h3>
+            <p className="feature-text">
+              Toggle your webcam for a realistic video conference experience to master posture, pacing, and eye contact.
+            </p>
+          </div>
+
+          <div className="feature-card glass-card">
+            <div className="feature-icon-box indigo-glow">
               <BsFileEarmarkTextFill />
             </div>
-            <h3 className="feature-title">PDF Resume Skill Parsing</h3>
+            <h3 className="feature-title">PDF Resume Experience Parsing</h3>
             <p className="feature-text">
-              Upload your PDF resume to generate targeted technical & behavioral questions matching your exact background.
+              Upload your resume to receive role-tailored questions focusing on your real past projects and stack.
             </p>
           </div>
 
           <div className="feature-card glass-card">
-            <div className="feature-icon-box purple">
+            <div className="feature-icon-box violet-glow">
               <BsCodeSlash />
             </div>
-            <h3 className="feature-title">Live Code Evaluation</h3>
+            <h3 className="feature-title">In-Browser Code Evaluation</h3>
             <p className="feature-text">
-              Solve algorithm & bug-fix questions directly in the browser across JavaScript, Python, Java, and C++.
+              Write solutions in JavaScript, Python, Java, or C++ with automated algorithmic scoring and complexity review.
             </p>
           </div>
 
           <div className="feature-card glass-card">
-            <div className="feature-icon-box amber">
+            <div className="feature-icon-box amber-glow">
               <BsBarChartFill />
             </div>
-            <h3 className="feature-title">Instant AI Scorecard</h3>
+            <h3 className="feature-title">Executive Scorecard & Rewind</h3>
             <p className="feature-text">
-              Receive detailed feedback broken down into technical accuracy, communication, and problem solving.
+              Inspect question-by-question coach debriefs, hireability verdicts, and comparative senior engineer answers.
+            </p>
+          </div>
+
+          <div className="feature-card glass-card">
+            <div className="feature-icon-box blue-glow">
+              <BsAwardFill />
+            </div>
+            <h3 className="feature-title">Daily Practice Streak</h3>
+            <p className="feature-text">
+              Stay accountable with habit tracking, readiness metrics, and 1-click role launchpads.
             </p>
           </div>
         </div>
       </section>
-
-      {/* ---- How It Works 3 Steps ---- */}
-      <section className="landing-steps-section">
-        <div className="section-header text-center">
-          <span className="section-kicker">Simple 3-Step Process</span>
-          <h2 className="section-title">How It Works</h2>
-        </div>
-
-        <div className="steps-row">
-          <div className="step-card glass-card">
-            <div className="step-number">01</div>
-            <h3 className="step-title">Configure Target Role</h3>
-            <p className="step-text">Choose your target position, difficulty level, and upload your PDF resume.</p>
-          </div>
-
-          <div className="step-card glass-card">
-            <div className="step-number">02</div>
-            <h3 className="step-title">Conduct Mock Session</h3>
-            <p className="step-text">Answer voice questions and complete live coding challenges with instant AI responses.</p>
-          </div>
-
-          <div className="step-card glass-card">
-            <div className="step-number">03</div>
-            <h3 className="step-title">Review Scorecard</h3>
-            <p className="step-text">Analyze overall readiness scores, strengths, and targeted improvement suggestions.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ---- Footer ---- */}
-      <footer className="landing-footer glass-card">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <BsCameraVideoFill className="footer-logo" />
-            <span>AI Mock Interview Platform</span>
-          </div>
-          <div className="footer-badge">
-            <BsShieldCheck className="shield-icon" />
-            <span>Encrypted • Private • Gemini AI Powered</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

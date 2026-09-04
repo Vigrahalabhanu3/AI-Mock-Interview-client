@@ -387,6 +387,113 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
+/* TIMING MODE & SCHEDULING STYLES */
+.timing-mode-card {
+  margin-top: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+}
+
+.timing-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timing-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.timing-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.timing-toggle-pills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.timing-pill {
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.timing-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.timing-pill.active {
+  background: rgba(6, 182, 212, 0.15);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: var(--accent-cyan);
+}
+
+.schedule-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.schedule-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.schedule-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.schedule-input {
+  padding: 10px 14px;
+  background: rgba(10, 16, 30, 0.85);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.schedule-input:focus {
+  border-color: var(--accent-cyan);
+}
+
+.email-notice-box {
+  grid-column: 1 / -1;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #a5f3fc;
+  line-height: 1.5;
+}
+
+.schedule-submit-btn {
+  background: linear-gradient(135deg, #0891b2 0%, #2563eb 100%) !important;
+}
+
 /* ACTIONS BAR */
 .setup-actions-bar {
   display: flex;

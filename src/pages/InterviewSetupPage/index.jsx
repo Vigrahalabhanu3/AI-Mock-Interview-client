@@ -4,6 +4,7 @@ import {
   uploadResume,
   getResume,
   startInterview,
+  scheduleInterview,
 } from '../../services/interviewService.js';
 import { ButtonLoader, ContextualAILoader, ErrorState } from '../../components/common/Loading';
 import INTERVIEW_ROLES from '../../constants/roles.js';
@@ -81,6 +82,67 @@ function InterviewSetupPage() {
   const [loading, setLoading] = useState(false);
   const [uploadingResume, setUploadingResume] = useState(false);
   const [initError, setInitError] = useState(null);
+
+  // Scheduling state
+  const getTomorrowDefaultDateTime = (daysAhead = 1, hour = 10) => {
+    const d = new Date();
+    d.setDate(d.getDate() + daysAhead);
+    d.setHours(hour, 0, 0, 0);
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
+  const [isScheduling, setIsScheduling] = useState(false);
+  const [scheduledDateTime, setScheduledDateTime] = useState(() => getTomorrowDefaultDateTime(1, 10));
+  const [timezone, setTimezone] = useState(
+    Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Kolkata'
+  );
+  const [duration, setDuration] = useState(30);
+  const [schedulingLoading, setSchedulingLoading] = useState(false);
+
+  const handleScheduleInterview = async () => {
+    if (!selectedRole) {
+      toast.error('Please select an interview role.');
+      return;
+    }
+    if (!resumeText) {
+      toast.error('Please upload your resume first.');
+      return;
+    }
+    if (!scheduledDateTime) {
+      toast.error('Please select interview date and time.');
+      return;
+    }
+
+    const targetDate = new Date(scheduledDateTime);
+    if (isNaN(targetDate.getTime())) {
+      toast.error('Please provide a valid scheduled date and time.');
+      return;
+    }
+    if (targetDate <= new Date()) {
+      toast.error('Scheduled date and time must be in the future.');
+      return;
+    }
+
+    setSchedulingLoading(true);
+    try {
+      await scheduleInterview({
+        role: selectedRole,
+        resumeText,
+        scheduledAt: targetDate.toISOString(),
+        timezone,
+        interviewType: `${selectedDifficulty.toUpperCase()} Technical & Behavioral Voice`,
+        duration,
+      });
+
+      toast.success('Interview successfully scheduled! Confirmation email dispatched.');
+      navigate('/history');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to schedule interview.');
+    } finally {
+      setSchedulingLoading(false);
+    }
+  };
 
   useEffect(() => {
     // If presetRole was passed from HomePage, auto-advance step or ensure it's selected
@@ -342,6 +404,128 @@ function InterviewSetupPage() {
                 </label>
               )}
             </div>
+
+            {/* Timing Mode: Start Immediately or Schedule for Later */}
+            <div className="timing-mode-card glass-card">
+              <div className="timing-header">
+                <span className="timing-title">Session Timing & Email Notifications</span>
+                <span className="timing-sub">Choose when you want to take your interview</span>
+              </div>
+
+              <div className="timing-toggle-pills">
+                <button
+                  type="button"
+                  className={`timing-pill ${!isScheduling ? 'active' : ''}`}
+                  onClick={() => setIsScheduling(false)}
+                >
+                  <span>🚀 Start Immediately</span>
+                </button>
+                <button
+                  type="button"
+                  className={`timing-pill ${isScheduling ? 'active' : ''}`}
+                  onClick={() => setIsScheduling(true)}
+                >
+                  <span>📅 Schedule for Later (with Reminders)</span>
+                </button>
+              </div>
+
+              {isScheduling && (
+                <div className="schedule-form-grid animate-fade-in">
+                  <div className="schedule-field">
+                    <label className="schedule-label">Interview Date & Time</label>
+                    <input
+                      type="datetime-local"
+                      value={scheduledDateTime}
+                      onChange={(e) => setScheduledDateTime(e.target.value)}
+                      className="schedule-input"
+                    />
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
+                      <button
+                        type="button"
+                        style={{
+                          background: 'rgba(99, 102, 241, 0.15)',
+                          border: '1px solid rgba(99, 102, 241, 0.3)',
+                          color: '#a5b4fc',
+                          fontSize: '11px',
+                          padding: '4px 8px',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => setScheduledDateTime(getTomorrowDefaultDateTime(1, 10))}
+                      >
+                        Tomorrow 10 AM
+                      </button>
+                      <button
+                        type="button"
+                        style={{
+                          background: 'rgba(99, 102, 241, 0.15)',
+                          border: '1px solid rgba(99, 102, 241, 0.3)',
+                          color: '#a5b4fc',
+                          fontSize: '11px',
+                          padding: '4px 8px',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => setScheduledDateTime(getTomorrowDefaultDateTime(1, 14))}
+                      >
+                        Tomorrow 2 PM
+                      </button>
+                      <button
+                        type="button"
+                        style={{
+                          background: 'rgba(99, 102, 241, 0.15)',
+                          border: '1px solid rgba(99, 102, 241, 0.3)',
+                          color: '#a5b4fc',
+                          fontSize: '11px',
+                          padding: '4px 8px',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => setScheduledDateTime(getTomorrowDefaultDateTime(2, 10))}
+                      >
+                        In 2 Days
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="schedule-field">
+                    <label className="schedule-label">Time Zone</label>
+                    <select
+                      value={timezone}
+                      onChange={(e) => setTimezone(e.target.value)}
+                      className="schedule-input"
+                    >
+                      <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                      <option value="UTC">UTC (Coordinated Universal Time)</option>
+                      <option value="America/New_York">America/New_York (EST/EDT)</option>
+                      <option value="America/Los_Angeles">America/Los_Angeles (PST/PDT)</option>
+                      <option value="Europe/London">Europe/London (GMT/BST)</option>
+                      <option value="Europe/Paris">Europe/Paris (CET/CEST)</option>
+                    </select>
+                  </div>
+
+                  <div className="schedule-field">
+                    <label className="schedule-label">Duration</label>
+                    <select
+                      value={duration}
+                      onChange={(e) => setDuration(parseInt(e.target.value, 10))}
+                      className="schedule-input"
+                    >
+                      <option value={15}>15 minutes (Quick Screen)</option>
+                      <option value={30}>30 minutes (Standard Round)</option>
+                      <option value={45}>45 minutes (Technical Deep Dive)</option>
+                      <option value={60}>60 minutes (Comprehensive Loop)</option>
+                    </select>
+                  </div>
+
+                  <div className="email-notice-box">
+                    <p>
+                      ✉️ A confirmation email with your interview link will be sent automatically. Automatic reminders will follow <strong>24 hours</strong> and <strong>1 hour</strong> prior to start time.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -361,6 +545,17 @@ function InterviewSetupPage() {
               <span>Next Step</span>
               <BsArrowRightShort className="btn-arrow" />
             </button>
+          ) : isScheduling ? (
+            <ButtonLoader
+              className="nav-btn start-btn schedule-submit-btn"
+              loading={schedulingLoading}
+              loadingText="Scheduling & Sending Confirmation..."
+              onClick={handleScheduleInterview}
+              disabled={schedulingLoading}
+            >
+              <BsStars className="btn-sparkle" />
+              <span>Confirm & Schedule Interview</span>
+            </ButtonLoader>
           ) : (
             <ButtonLoader
               className="nav-btn start-btn"

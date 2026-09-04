@@ -27,6 +27,38 @@ const startInterview = async (role, resumeText, totalQuestions) => {
     return response.data.data;
 };
 
+const scheduleInterview = async ({ role, resumeText, scheduledAt, timezone, interviewType, duration }) => {
+    const response = await API.post('/interview/schedule', {
+        role,
+        resumeText,
+        scheduledAt,
+        timezone,
+        interviewType,
+        duration,
+    });
+    return response.data.data;
+};
+
+const rescheduleInterview = async (interviewId, { newScheduledAt, timezone }) => {
+    const response = await API.patch(`/interview/${interviewId}/reschedule`, {
+        newScheduledAt,
+        timezone,
+    });
+    return response.data.data;
+};
+
+const cancelInterview = async (interviewId, cancellationReason) => {
+    const response = await API.patch(`/interview/${interviewId}/cancel`, {
+        cancellationReason,
+    });
+    return response.data.data;
+};
+
+const getEmailLogs = async (interviewId) => {
+    const response = await API.get(`/interview/${interviewId}/email-logs`);
+    return response.data.data;
+};
+
 const submitTextAnswer = async (interviewId, answer) => {
     const response = await API.post(`/interview/${interviewId}/answer`, { answer });
     return response.data.data;
@@ -61,6 +93,10 @@ export {
     uploadResume,
     getResume,
     startInterview,
+    scheduleInterview,
+    rescheduleInterview,
+    cancelInterview,
+    getEmailLogs,
     submitTextAnswer,
     transcribeAudio,
     submitCode,

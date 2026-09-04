@@ -200,6 +200,20 @@ function LoginPage() {
             >
               {isSignUp ? 'Create Account' : 'Sign In'}
             </ButtonLoader>
+
+            {!isSignUp && (
+              <button
+                type="button"
+                className="demo-autofill-btn"
+                onClick={() => {
+                  setEmail('bhanu@test.com');
+                  setPassword('Password123!');
+                  toast.success('Loaded demo test credentials');
+                }}
+              >
+                <span>⚡ Fill Demo Credentials</span>
+              </button>
+            )}
           </form>
         </div>
 

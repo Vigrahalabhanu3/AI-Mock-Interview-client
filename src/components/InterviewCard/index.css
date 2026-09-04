@@ -57,6 +57,53 @@
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
+.badge-scheduled {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+}
+
+.badge-cancelled {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.card-scheduled {
+  border-color: rgba(99, 102, 241, 0.25);
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(49, 46, 129, 0.15) 100%);
+}
+
+.interview-email-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -4px;
+}
+
+.email-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.email-status-pill.success {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.email-icon {
+  font-size: 12px;
+}
+
 .interview-card-meta {
   display: flex;
   align-items: center;
@@ -96,9 +143,21 @@
 
 .interview-card-footer {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
   padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.card-action-hint {
+  font-size: 12px;
+  font-weight: 600;
+  color: #818cf8;
+  transition: color 0.2s ease;
+}
+
+.interview-card:hover .card-action-hint {
+  color: #a5b4fc;
 }
 
 .interview-card-delete {
